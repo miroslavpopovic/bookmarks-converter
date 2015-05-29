@@ -40,7 +40,12 @@ namespace CodeMind.BookmarksConverter
 
                 arguments.File = EnsureFullPath(arguments.File);
                 arguments.Output = EnsureFullPath(arguments.Output);
-                // TODO: Do the actual conversion here...
+
+                var converter = new WdrConverter();
+                var bookmarks = converter.Convert(arguments.File);
+
+                var generator = new OutputGenerator();
+                generator.Generate(bookmarks, arguments.Output);
             }
 
             Console.WriteLine("Press Enter to finish");
