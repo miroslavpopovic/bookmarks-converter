@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Fclp;
 
 namespace CodeMind.BookmarksConverter
@@ -32,16 +33,29 @@ namespace CodeMind.BookmarksConverter
             var result = parser.Parse(args);
 
             if (result.HasErrors)
-            {
                 Console.WriteLine(result.ErrorText);
-            }
             else
             {
+                var arguments = parser.Object;
+
+                arguments.File = EnsureFullPath(arguments.File);
+                arguments.Output = EnsureFullPath(arguments.Output);
                 // TODO: Do the actual conversion here...
             }
 
             Console.WriteLine("Press Enter to finish");
             Console.ReadLine();
+        }
+
+        private static string EnsureFullPath(string fileName)
+        {
+            if (Path.IsPathRooted(fileName)) return fileName;
+
+            var root = Path.GetDirectoryName(typeof (Program).Assembly.Location);
+
+            // ReSharper disable AssignNullToNotNullAttribute
+            return Path.Combine(root, fileName);
+            // ReSharper restore AssignNullToNotNullAttribute
         }
     }
 }
